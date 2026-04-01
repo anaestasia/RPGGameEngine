@@ -1,0 +1,23 @@
+# Maven
+target/
+*.class
+*.jar
+*.war
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# IntelliJ
+.idea/
+*.iml
+
+# Spring Boot - fichiers sensibles
+src/main/resources/application.yml
+src/main/resources/application.yaml
+
+# OS
+.DS_Store
+Thumbs.db

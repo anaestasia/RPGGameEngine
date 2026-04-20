@@ -35,20 +35,25 @@ public class Hero {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Builder.Default
     @Column(name = "pv", nullable = false)
-    private int pv;
+    private int pv = 10;
 
+    @Builder.Default
     @Column(name = "atq", nullable = false)
-    private int atq;
+    private int atq = 2;
 
+    @Builder.Default
     @Column(name = "def", nullable = false)
-    private int def;
+    private int def = 0;
 
+    @Builder.Default
     @Column(name = "speed", nullable = false)
-    private int speed;
+    private int speed = 1;
 
+    @Builder.Default
     @Column(name = "exp", nullable = false)
-    private int exp;
+    private int exp = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "race", nullable = false)

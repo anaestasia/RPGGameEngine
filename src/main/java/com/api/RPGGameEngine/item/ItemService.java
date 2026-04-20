@@ -13,13 +13,8 @@ import com.api.RPGGameEngine.item.dto.ItemResponseDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ItemService {
-	
-	// Pas de @RequiredArgsConstructor sinon erreur sur le champ final itemService (non détecté par eclipse)
-		public ItemService(ItemRepository itemRepository) {
-		    this.itemRepository = itemRepository;
-		}
 	
 	
 	private final ItemRepository itemRepository;

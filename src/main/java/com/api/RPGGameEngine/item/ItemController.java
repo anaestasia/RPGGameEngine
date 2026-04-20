@@ -24,13 +24,8 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/items")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class ItemController {
-	
-	// Pas de @RequiredArgsConstructor sinon erreur sur le champ final itemService (non détecté par eclipse)
-	public ItemController(ItemService itemService) {
-	    this.itemService = itemService;
-	}
 	
 	private final ItemService itemService;
 

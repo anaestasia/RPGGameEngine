@@ -46,12 +46,17 @@ public class HeroService {
                 .name(dto.name())
                 .race(dto.race())
                 .role(dto.role())
+                // Stats de base + bonus race et role
+                .pv(10    + dto.race().getBonusPv()    + dto.role().getBonusPv())
+                .atq(2    + dto.race().getBonusAtq()   + dto.role().getBonusAtq())
+                .def(0    + dto.race().getBonusDef()   + dto.role().getBonusDef())
+                .speed(1  + dto.race().getBonusSpeed() + dto.role().getBonusSpeed())
                 .build();
 
         return HeroResponseDTO.from(heroRepository.save(hero));
     }
     
- // Met à jour le personnage
+ // Met à jour le personnage 
     public HeroResponseDTO update(UUID id, HeroRequestDTO dto) {
    
     	// Vérifie que le personnage existe
@@ -66,6 +71,10 @@ public class HeroService {
         hero.setName(dto.name());
         hero.setRace(dto.race());
         hero.setRole(dto.role());
+        hero.setPv(10   + dto.race().getBonusPv()    + dto.role().getBonusPv());
+        hero.setAtq(2   + dto.race().getBonusAtq()   + dto.role().getBonusAtq());
+        hero.setDef(0   + dto.race().getBonusDef()   + dto.role().getBonusDef());
+        hero.setSpeed(1 + dto.race().getBonusSpeed() + dto.role().getBonusSpeed());
 
         return HeroResponseDTO.from(heroRepository.save(hero));
     }

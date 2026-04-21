@@ -1,6 +1,7 @@
 package com.api.RPGGameEngine.common.enums;
 
 public enum HeroRole {
+	//ROLE(pv, atq, def, speed)
 	THIEF(0, 0, 0, 1),
     BARD(0, 0, 2, 0),
     MAGICIAN(0, 3, 0, 0),

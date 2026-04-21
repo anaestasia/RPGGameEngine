@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.api.RPGGameEngine.common.exceptions.ResourceNotFoundException;
 import com.api.RPGGameEngine.hero.dto.HeroRequestDTO;
 import com.api.RPGGameEngine.hero.dto.HeroResponseDTO;
+import com.api.RPGGameEngine.hero.dto.XpRequestDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,9 @@ public class HeroService {
 	
 	private final HeroRepository heroRepository;
 	
-	// Liste tous les personnages
+	/**
+     * Liste tous les personnages
+     */
 	public List<HeroResponseDTO> findAll(){
 		
 		return heroRepository.findAll()
@@ -26,7 +29,9 @@ public class HeroService {
 				.toList();
 	}
 	
-	// Récupère le personnage par son ID
+	/**
+     * Récupère le personnage par son ID
+     */
     public HeroResponseDTO findById(UUID id) {
     	
         return heroRepository.findById(id)
@@ -34,7 +39,9 @@ public class HeroService {
                 .orElseThrow(() -> new ResourceNotFoundException("Personnage introuvable avec l'id : " + id));
     }
     
- // Créer le peronnage
+    /**
+     * Créé le nouveau personnage
+     */
     public HeroResponseDTO create(HeroRequestDTO dto) {
     	
     	// Vérifie si le nom de personnage existe déjà
@@ -56,7 +63,22 @@ public class HeroService {
         return HeroResponseDTO.from(heroRepository.save(hero));
     }
     
- // Met à jour le personnage 
+    /**
+     * Ajoute l'exp gagné au personnage via son ID
+     */
+    public HeroResponseDTO addExperience(UUID id, XpRequestDTO dto) {
+        Hero hero = heroRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Personnage introuvable avec l'id : " + id));
+
+        hero.setExp(hero.getExp() + dto.amount());
+
+        return HeroResponseDTO.from(heroRepository.save(hero));
+    }
+    
+    /**
+     * Met à jour le personnage existant
+     */
     public HeroResponseDTO update(UUID id, HeroRequestDTO dto) {
    
     	// Vérifie que le personnage existe
@@ -79,7 +101,9 @@ public class HeroService {
         return HeroResponseDTO.from(heroRepository.save(hero));
     }
 
-    // Supprime le personnage récupéré par son ID
+    /**
+     * Supprime le personnage par son ID
+     */
     public void delete(UUID id) {
     	
     	// Vérifie que le personnage existe

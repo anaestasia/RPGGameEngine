@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.RPGGameEngine.hero.dto.HeroResponseDTO;
+import com.api.RPGGameEngine.hero.dto.XpRequestDTO;
 import com.api.RPGGameEngine.hero.dto.HeroRequestDTO;
 
 import jakarta.validation.Valid;
@@ -41,6 +42,13 @@ public class HeroController {
 	@PostMapping
     public ResponseEntity<HeroResponseDTO> create(@Valid @RequestBody HeroRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(heroService.create(dto));
+    }
+	
+	@PostMapping("/{id}/xp")
+    public ResponseEntity<HeroResponseDTO> addExperience(
+    		@PathVariable UUID id,
+    		@Valid @RequestBody XpRequestDTO dto) {
+        return ResponseEntity.ok(heroService.addExperience(id, dto));
     }
 	
 	@PutMapping("/{id}")

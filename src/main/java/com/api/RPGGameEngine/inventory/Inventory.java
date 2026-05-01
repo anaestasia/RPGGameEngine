@@ -22,13 +22,13 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "hero_item")
-@IdClass(HeroItemId.class) // Mieux géré que @EmbeddedId car contient des relations JPA
+@IdClass(InventoryId.class) // Mieux géré que @EmbeddedId car contient des relations JPA
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HeroItem {
+public class Inventory {
 	@Id
     @ManyToOne(fetch = FetchType.LAZY) // LAZY = données chargées que si demandées
     @JoinColumn(name = "hero_id", nullable = false)
@@ -41,9 +41,9 @@ public class HeroItem {
 
     @Id
     @Enumerated(EnumType.STRING)
-    @Column(name = "slot", nullable = false)
+    @Column(name = "slot")
     private SlotType slot;
-
-    @Column(name = "equipped", nullable = false)
+    
+    @Column(name = "equipped")
     private boolean equipped;
 }

@@ -52,6 +52,7 @@ public class HeroController {
         return ResponseEntity.status(HttpStatus.CREATED).body(heroService.create(dto));
     }
 	
+	// On utilise POST et pas PUT car PUT est idempotent (si on l'appelle plusieurs fois de suite, le résultat est différent : incrémente l'xp)
 	@Operation(summary = "Ajouter de l'XP à un personnage")
 	@PostMapping("/{id}/xp")
     public ResponseEntity<HeroResponseDTO> addExperience(

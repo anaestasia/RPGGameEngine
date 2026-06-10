@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.enums.StatType;
+import com.api.RPGGameEngine.item.Item;
 
 public record ItemResponseDTO(
 		UUID id,
@@ -13,7 +14,7 @@ public record ItemResponseDTO(
         int bonus,
         StatType stat
 ) {
-	public static ItemResponseDTO from(com.api.RPGGameEngine.item.Item item) {
+	public static ItemResponseDTO from(Item item) {
         return new ItemResponseDTO(
                 item.getId(),
                 item.getName(),

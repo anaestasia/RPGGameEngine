@@ -95,7 +95,7 @@ public class InventoryService {
                     "L'item '" + item.getName() + "' est déjà équipé");
         }
 
-        // Les consommables ne peuvent pas être équipés
+        // Vérifie si ce n'est pas un consommable
         if (item.getType() == ItemType.CONSUMABLE) {
             throw new IllegalArgumentException(
                     "Les consommables ne peuvent pas être équipés");
@@ -111,16 +111,23 @@ public class InventoryService {
                     "Le slot " + targetSlot + " est déjà occupé");
         }
 
-        // Cas TWO_HAND — vérifie et bloque les deux mains
+        // Cas TWO_HAND — vérifie et bloque les deux mains (return right_hand uniquement car représente l'item équipé)
         if (item.getType() == ItemType.TWO_HAND_WEAPON) {
-            equipTwoHanded(hero, item, inventory);
-            return InventoryResponseDTO.from(inventory);
+            return InventoryResponseDTO.from(equipTwoHanded(hero, item, inventory));
         }
 
         // Cas standard
-        inventory.setSlot(targetSlot);
-        inventory.setEquipped(true);
-        return InventoryResponseDTO.from(inventoryRepository.save(inventory));
+        inventoryRepository.delete(inventory); // Supprime d'abord le slot sinon modifie la clé primaire (interdit par Hibernate)
+        inventoryRepository.flush(); // force la suppression avant l'insertion
+
+        Inventory newInventory = Inventory.builder()
+                .hero(hero)
+                .item(item)
+                .slot(targetSlot)
+                .equipped(true)
+                .build();
+        
+        return InventoryResponseDTO.from(inventoryRepository.save(newInventory));
     }
     
     // ────────────────────────────────────────────────
@@ -150,9 +157,17 @@ public class InventoryService {
         }
 
         // Cas standard
-        inventory.setSlot(SlotType.INVENTORY);
-        inventory.setEquipped(false);
-        return InventoryResponseDTO.from(inventoryRepository.save(inventory));
+        inventoryRepository.delete(inventory); // Supprime d'abord le slot sinon modifie la clé primaire (interdit par Hibernate)
+        inventoryRepository.flush(); // force la suppression avant l'insertion
+        
+        Inventory newInventory = Inventory.builder()
+                .hero(hero)
+                .item(item)
+                .slot(SlotType.INVENTORY)
+                .equipped(false)
+                .build();
+        
+        return InventoryResponseDTO.from(inventoryRepository.save(newInventory));
     }
 
     // ────────────────────────────────────────────────
@@ -215,8 +230,9 @@ public class InventoryService {
     /**
      * Équipe une arme à deux mains — occupe RIGHT_HAND et LEFT_HAND.
      * Crée une seconde entrée Inventory pour la main gauche.
+     * @return 
      */
-    private void equipTwoHanded(Hero hero, Item item, Inventory inventory) {
+    private Inventory equipTwoHanded(Hero hero, Item item, Inventory inventory) {
         // Vérifie que les deux mains sont libres
         boolean rightOccupied = inventoryRepository
                 .existsByHeroAndSlotAndEquipped(hero, SlotType.RIGHT_HAND, true);
@@ -228,12 +244,21 @@ public class InventoryService {
                     "Les deux mains doivent être libres pour équiper une arme à deux mains");
         }
 
-        // Main droite — modifie l'entrée existante
-        inventory.setSlot(SlotType.RIGHT_HAND);
-        inventory.setEquipped(true);
-        inventoryRepository.save(inventory);
+        // Supprime l'entrée existante (sinon modifie la clé primaire => interdit par hibernate)
+      
+        inventoryRepository.delete(inventory);
+        inventoryRepository.flush();
+        
+        
+        // Main droite
+        Inventory rightHand = Inventory.builder()
+        		.hero(hero)
+        		.item(item)
+        		.slot(SlotType.RIGHT_HAND)
+        		.equipped(true)
+        		.build();
 
-        // Main gauche — crée une seconde entrée
+        // Main gauche
         Inventory leftHand = Inventory.builder()
                 .hero(hero)
                 .item(item)
@@ -241,6 +266,7 @@ public class InventoryService {
                 .equipped(true)
                 .build();
         inventoryRepository.save(leftHand);
+        return inventoryRepository.save(rightHand); // Return que right_hand car représente l'item équipé
     }
 
     /**

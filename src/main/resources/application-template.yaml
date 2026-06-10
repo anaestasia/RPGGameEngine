@@ -27,5 +27,20 @@ spring:
     enabled: true
     locations: classpath:db/migration
 
+# ===========================
+# Jackson
+# ===========================
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    tags-sorter: alpha
+    operations-sorter: alpha
+
 server:
   port: 8080

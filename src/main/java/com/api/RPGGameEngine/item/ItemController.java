@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.api.RPGGameEngine.common.enums.ItemRarity;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.item.dto.ItemRequestDTO;
 import com.api.RPGGameEngine.item.dto.ItemResponseDTO;
@@ -32,14 +33,13 @@ public class ItemController {
 	
 	private final ItemService itemService;
 
-	@Operation(summary = "Lister tous les items", description = "Retourne la liste complète ou filtrée par type")
+	@Operation(summary = "Lister tous les items", description = "Retourne la liste complète ou filtrée par type ou par rareté")
     @GetMapping
     public ResponseEntity<List<ItemResponseDTO>> getAll(
-            @RequestParam(required = false) ItemType type) {
+            @RequestParam(required = false) ItemType type,
+            @RequestParam(required = false) ItemRarity rarity) {
 
-        List<ItemResponseDTO> items = (type != null)
-                ? itemService.findByType(type)
-                : itemService.findAll();
+		List<ItemResponseDTO> items = itemService.findByFilters(type, rarity);
 
         return ResponseEntity.ok(items);
     }

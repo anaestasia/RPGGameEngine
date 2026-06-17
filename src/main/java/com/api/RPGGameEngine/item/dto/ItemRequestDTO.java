@@ -1,5 +1,6 @@
 package com.api.RPGGameEngine.item.dto;
 
+import com.api.RPGGameEngine.common.enums.ItemRarity;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.enums.StatType;
 
@@ -30,5 +31,8 @@ public record ItemRequestDTO(
         int bonus,
 
         @NotNull(message = "La statistique bonifiée est obligatoire")
-        StatType stat
+        StatType stat,
+        
+        @NotNull(message = "La rareté est obligatoire")
+        ItemRarity rarity
 ) {}

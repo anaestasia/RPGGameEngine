@@ -2,6 +2,7 @@ package com.api.RPGGameEngine.item.dto;
 
 import java.util.UUID;
 
+import com.api.RPGGameEngine.common.enums.ItemRarity;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.enums.StatType;
 import com.api.RPGGameEngine.item.Item;
@@ -12,7 +13,8 @@ public record ItemResponseDTO(
         String description,
         ItemType type,
         int bonus,
-        StatType stat
+        StatType stat,
+        ItemRarity rarity
 ) {
 	public static ItemResponseDTO from(Item item) {
         return new ItemResponseDTO(
@@ -21,7 +23,8 @@ public record ItemResponseDTO(
                 item.getDescription(),
                 item.getType(),
                 item.getBonus(),
-                item.getStat()
+                item.getStat(),
+                item.getRarity()
         );
     }
 }

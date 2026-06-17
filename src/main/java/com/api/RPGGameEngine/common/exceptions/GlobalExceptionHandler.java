@@ -12,18 +12,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 	
+	// 404 - Resource Not Found
 	@ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ApiError(404, ex.getMessage(), LocalDateTime.now()));
     }
 
+	// 409 - Illegal Argument
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ApiError(409, ex.getMessage(), LocalDateTime.now()));
     }
 
+    // 400 - Method Argument Not Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult()
@@ -34,5 +37,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ApiError(400, message, LocalDateTime.now()));
+    }
+    
+    // 409 - Slot Occupied
+    @ExceptionHandler(SlotOccupiedException.class)
+    public ResponseEntity<ApiError> handleSlotOccupied(SlotOccupiedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiError(409, ex.getMessage(), LocalDateTime.now()));
     }
 }

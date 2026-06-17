@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.api.RPGGameEngine.common.enums.ItemRarity;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.exceptions.ResourceNotFoundException;
 import com.api.RPGGameEngine.item.dto.ItemRequestDTO;
@@ -18,21 +19,23 @@ public class ItemService {
 	
 	
 	private final ItemRepository itemRepository;
-
-	// Liste tous les items
-    public List<ItemResponseDTO> findAll() {
+    
+    // Liste tous les items, filtre par type et/ou par rareté
+    public List<ItemResponseDTO> findByFilters(ItemType type, ItemRarity rarity) {
     	
-        return itemRepository.findAll()
-                .stream()
-                .map(ItemResponseDTO::from)
-                .toList();
-    }
-
-    // Liste tous les items en fonction du type
-    public List<ItemResponseDTO> findByType(ItemType type) {
+    	List<Item> items;
     	
-        return itemRepository.findByType(type)
-                .stream()
+    	if (type != null && rarity != null) {
+            items = itemRepository.findByTypeAndRarity(type, rarity);
+        } else if (type != null) {
+            items = itemRepository.findByType(type);
+        } else if (rarity != null) {
+            items = itemRepository.findByRarity(rarity);
+        } else {
+            items = itemRepository.findAll();
+        }
+    	
+        return items.stream()
                 .map(ItemResponseDTO::from)
                 .toList();
     }
@@ -59,6 +62,7 @@ public class ItemService {
                 .type(dto.type())
                 .bonus(dto.bonus())
                 .stat(dto.stat())
+                .rarity(dto.rarity())
                 .build();
 
         return ItemResponseDTO.from(itemRepository.save(item));
@@ -81,6 +85,7 @@ public class ItemService {
         item.setType(dto.type());
         item.setBonus(dto.bonus());
         item.setStat(dto.stat());
+        item.setRarity(dto.rarity());
 
         return ItemResponseDTO.from(itemRepository.save(item));
     }

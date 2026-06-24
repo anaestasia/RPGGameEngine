@@ -2,7 +2,6 @@ package com.api.RPGGameEngine.item;
 
 import java.util.UUID;
 
-import com.api.RPGGameEngine.common.enums.ItemRarity;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.enums.StatType;
 
@@ -49,8 +48,4 @@ public class Item {
     @Enumerated(EnumType.STRING)
     @Column(name = "stat", nullable = false)
     private StatType stat;
-    
-    @Enumerated(EnumType.STRING)
-    @Column(name = "rarity", nullable = false)
-    private ItemRarity rarity;
 }

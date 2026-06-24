@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.api.RPGGameEngine.common.enums.ItemType;
 import com.api.RPGGameEngine.common.enums.SlotType;
 import com.api.RPGGameEngine.common.exceptions.ResourceNotFoundException;
+import com.api.RPGGameEngine.common.exceptions.SlotOccupiedException;
 import com.api.RPGGameEngine.hero.Hero;
 import com.api.RPGGameEngine.hero.HeroRepository;
 import com.api.RPGGameEngine.inventory.dto.InventoryResponseDTO;
@@ -107,8 +108,7 @@ public class InventoryService {
         // Vérifie que le slot n'est pas plein
         long count = inventoryRepository.countByHeroAndSlot(hero, targetSlot);
         if (count >= targetSlot.getMaxItems()) {
-            throw new IllegalStateException(
-                    "Le slot " + targetSlot + " est déjà occupé");
+        	throw new SlotOccupiedException(targetSlot);
         }
 
         // Cas TWO_HAND — vérifie et bloque les deux mains (return right_hand uniquement car représente l'item équipé)

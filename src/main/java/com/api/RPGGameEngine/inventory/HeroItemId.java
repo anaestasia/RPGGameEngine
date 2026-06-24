@@ -6,14 +6,14 @@ import java.util.UUID;
 
 import com.api.RPGGameEngine.common.enums.SlotType;
 
-public class InventoryId implements Serializable {
+public class HeroItemId implements Serializable {
 	private UUID hero;
     private UUID item;
     private SlotType slot;
 
-    public InventoryId() {}
+    public HeroItemId() {}
 
-    public InventoryId(UUID hero, UUID item, SlotType slot) {
+    public HeroItemId(UUID hero, UUID item, SlotType slot) {
         this.hero = hero;
         this.item = item;
         this.slot = slot;
@@ -22,7 +22,7 @@ public class InventoryId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InventoryId that)) return false;
+        if (!(o instanceof HeroItemId that)) return false;
         return Objects.equals(hero, that.hero)
                 && Objects.equals(item, that.item)
                 && slot == that.slot;

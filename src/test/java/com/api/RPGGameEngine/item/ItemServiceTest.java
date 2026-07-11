@@ -1,7 +1,9 @@
 package com.api.RPGGameEngine.item;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,4 +226,96 @@ public class ItemServiceTest {
     
     /* ---- FindByFilters ---- */
     
+    @Test
+    void findByFilters_shouldReturnAllItems_whenNoFilterProvided() {
+    	// Arrange
+        given(itemRepository.findAll()).willReturn(List.of(item));
+
+        // Act
+        List<ItemResponseDTO> result = itemService.findByFilters(null, null);
+
+        // Assert
+        assertThat(result).hasSize(1);
+        
+        // On vérifie qu'on rentre dans le bon cas du if/else
+        verify(itemRepository).findAll();
+        
+        // On vérifie que les autres cas ne sont pas déclenchés
+        verify(itemRepository, never()).findByType(any());
+        verify(itemRepository, never()).findByRarity(any());
+        verify(itemRepository, never()).findByTypeAndRarity(any(), any());
+    }
+    
+    @Test
+    void findByFilters_shouldReturnFilteredItems_whenOnlyTypeProvided() {
+    	// Arrange
+        given(itemRepository.findByType(ItemType.ARMOR)).willReturn(List.of(item));
+
+        // Act
+        List<ItemResponseDTO> result = itemService.findByFilters(ItemType.ARMOR, null);
+
+        // Assert
+        assertThat(result).hasSize(1);
+        
+        // On vérifie qu'on rentre dans le bon cas du if/else
+        verify(itemRepository.findByType(ItemType.ARMOR));
+        
+        // On vérifie que les autres cas ne sont pas déclenchés
+        verify(itemRepository, never()).findAll();
+        verify(itemRepository, never()).findByRarity(any());
+        verify(itemRepository, never()).findByTypeAndRarity(any(), any());
+    }
+    
+    @Test
+    void findByFilters_shouldReturnFilteredItems_whenOnlyRarityProvided() {
+    	// Arrange
+        given(itemRepository.findByRarity(ItemRarity.COMMON)).willReturn(List.of(item));
+
+        // Act
+        List<ItemResponseDTO> result = itemService.findByFilters(null, ItemRarity.COMMON);
+
+        // Assert
+        assertThat(result).hasSize(1);
+        
+        // On vérifie qu'on rentre dans le bon cas du if/else
+        verify(itemRepository.findByRarity(ItemRarity.COMMON));
+        
+        // On vérifie que les autres cas ne sont pas déclenchés
+        verify(itemRepository, never()).findAll();
+        verify(itemRepository, never()).findByType(any());
+        verify(itemRepository, never()).findByTypeAndRarity(any(), any());
+    }
+    
+    @Test
+    void findByFilters_shouldReturnFilteredItems_whenTypeAndRarityProvided() {
+    	// Arrange
+        given(itemRepository.findByTypeAndRarity(ItemType.ARMOR, ItemRarity.COMMON)).willReturn(List.of(item));
+
+        // Act
+        List<ItemResponseDTO> result = itemService.findByFilters(ItemType.ARMOR, ItemRarity.COMMON);
+
+        // Assert
+        assertThat(result).hasSize(1);
+        
+        // On vérifie qu'on rentre dans le bon cas du if/else
+        verify(itemRepository).findByTypeAndRarity(ItemType.ARMOR, ItemRarity.COMMON);
+        
+        // On vérifie que les autres cas ne sont pas déclenchés
+        verify(itemRepository, never()).findAll();
+        verify(itemRepository, never()).findByType(any());
+        verify(itemRepository, never()).findByRarity(any());
+    }
+    
+    @Test
+    void findByFilters_shouldReturnEmptyList_whenNoItemMatchesFilters() {
+        // Arrange
+        given(itemRepository.findByTypeAndRarity(ItemType.ARMOR, ItemRarity.LEGENDARY)).willReturn(List.of());
+
+        // Act
+        List<ItemResponseDTO> result = itemService.findByFilters(ItemType.ARMOR, ItemRarity.LEGENDARY);
+
+        // Assert
+        assertThat(result).isNotNull();  // ne doit pas retourner null
+        assertThat(result).isEmpty();    // mais une liste vide
+    }
 }

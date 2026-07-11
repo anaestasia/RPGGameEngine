@@ -3,7 +3,6 @@ package com.api.RPGGameEngine.item;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,8 +51,11 @@ public class ItemServiceTest {
                 .build();
     }
     
-    /* ---- FindById ---- */
+    /* --------------------------------
+       ----------- FindById ----------- 
+       -------------------------------- */
     
+    // Cas : item trouvé
     @Test
     void findById_shouldReturnItem_whenItemExists() {
         // Arrange : on dit au mock quoi renvoyer quand on l'appelle avec cet ID
@@ -67,6 +69,7 @@ public class ItemServiceTest {
         assertThat(result.name()).isEqualTo("Épée rouillée");
     }
     
+    // Cas : item introuvable
     @Test
     void findById_shouldThrowException_whenItemNotFound() { 
         // Arrange
@@ -81,8 +84,11 @@ public class ItemServiceTest {
         verify(itemRepository, never()).save(any());
     }
     
-    /* ---- Create ---- */
+    /* --------------------------------
+       ----------- Create -------------
+       -------------------------------- */
     
+    // Cas : nom disponible
     @Test
     void create_shouldReturnCreatedItem_whenNameisAvailable() {
     	
@@ -107,6 +113,7 @@ public class ItemServiceTest {
         verify(itemRepository).save(any(Item.class));
     }
     
+    // Cas : nom déjà pris
     @Test
     void create_shouldThrowException_whenNameAlreadyExists() {
         // Arrange
@@ -129,8 +136,11 @@ public class ItemServiceTest {
         verify(itemRepository, never()).save(any());
     }
     
-    /* ---- Update ---- */
+    /* --------------------------------
+       ----------- Update -------------
+       -------------------------------- */
     
+    // Cas : nom disponible + item trouvé
     @Test
     void update_shouldReturnUpdatedItem_whenItemExistsAndNameIsAvailable() {
         // Arrange
@@ -154,6 +164,7 @@ public class ItemServiceTest {
         verify(itemRepository).save(any(Item.class));
     }
     
+    // Cas : item introuvable
     @Test
     void update_shouldThrowException_whenItemNotFound() {
         // Arrange
@@ -175,6 +186,7 @@ public class ItemServiceTest {
         verify(itemRepository, never()).save(any());
     }
     
+    // Cas : nom déjà pris
     @Test
     void update_shouldThrowException_whenNewNameAlreadyExists() {
         // Arrange
@@ -197,8 +209,11 @@ public class ItemServiceTest {
         verify(itemRepository, never()).save(any());
     }
     
-    /* ---- Delete ---- */
+    /* --------------------------------
+       ----------- Delete -------------
+       -------------------------------- */
     
+    // Cas : item trouvé
     @Test
     void delete_shouldDeleteItem_whenItemExists() {
         // Arrange
@@ -211,6 +226,8 @@ public class ItemServiceTest {
         verify(itemRepository).deleteById(itemId);
     }
     
+    
+    // Cas : item introuvable
     @Test
     void delete_shouldThrowException_whenItemNotFound() {
         // Arrange
@@ -224,8 +241,11 @@ public class ItemServiceTest {
         verify(itemRepository, never()).deleteById(any());
     }
     
-    /* ---- FindByFilters ---- */
+    /* ---------------------------------
+       -------- FindByFilters ----------
+       --------------------------------- */
     
+    // Cas : aucun filtre
     @Test
     void findByFilters_shouldReturnAllItems_whenNoFilterProvided() {
     	// Arrange
@@ -246,6 +266,7 @@ public class ItemServiceTest {
         verify(itemRepository, never()).findByTypeAndRarity(any(), any());
     }
     
+    // Cas : type uniquement
     @Test
     void findByFilters_shouldReturnFilteredItems_whenOnlyTypeProvided() {
     	// Arrange
@@ -266,6 +287,7 @@ public class ItemServiceTest {
         verify(itemRepository, never()).findByTypeAndRarity(any(), any());
     }
     
+    // Cas : rareté uniquement
     @Test
     void findByFilters_shouldReturnFilteredItems_whenOnlyRarityProvided() {
     	// Arrange
@@ -286,6 +308,7 @@ public class ItemServiceTest {
         verify(itemRepository, never()).findByTypeAndRarity(any(), any());
     }
     
+    // Cas : type + rareté
     @Test
     void findByFilters_shouldReturnFilteredItems_whenTypeAndRarityProvided() {
     	// Arrange
@@ -306,6 +329,7 @@ public class ItemServiceTest {
         verify(itemRepository, never()).findByRarity(any());
     }
     
+    // Cas : aucun match avec les filtres
     @Test
     void findByFilters_shouldReturnEmptyList_whenNoItemMatchesFilters() {
         // Arrange

@@ -102,7 +102,9 @@ public class ItemServiceTest {
                 item.getRarity()
         );
     	given(itemRepository.existsByName(dto.name())).willReturn(false);
-    	given(itemRepository.save(item)).willReturn(item);
+    	given(itemRepository.save(any(Item.class))).willReturn(item);
+    	// any(Item.class) : Accepte n'importe quel item ("item" désigne déjà celui créé dans le SetUp())
+    	
     	
     	// Act
     	ItemResponseDTO result = itemService.create(dto);
@@ -279,7 +281,7 @@ public class ItemServiceTest {
         assertThat(result).hasSize(1);
         
         // On vérifie qu'on rentre dans le bon cas du if/else
-        verify(itemRepository.findByType(ItemType.ARMOR));
+        verify(itemRepository).findByType(ItemType.ARMOR);
         
         // On vérifie que les autres cas ne sont pas déclenchés
         verify(itemRepository, never()).findAll();
@@ -300,7 +302,7 @@ public class ItemServiceTest {
         assertThat(result).hasSize(1);
         
         // On vérifie qu'on rentre dans le bon cas du if/else
-        verify(itemRepository.findByRarity(ItemRarity.COMMON));
+        verify(itemRepository).findByRarity(ItemRarity.COMMON);
         
         // On vérifie que les autres cas ne sont pas déclenchés
         verify(itemRepository, never()).findAll();

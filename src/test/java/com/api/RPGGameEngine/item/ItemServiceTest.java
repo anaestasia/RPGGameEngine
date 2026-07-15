@@ -78,7 +78,7 @@ public class ItemServiceTest {
         // Act / Assert
         assertThatThrownBy(() -> itemService.findById(itemId))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Item introuvable avec l'id");
+                .hasMessageContaining("Item introuvable avec l'id : " + itemId);
 
         // On vérifie qu'il n'y a pas eu de save()
         verify(itemRepository, never()).save(any());

@@ -64,7 +64,7 @@ class ItemControllerTest {
     }
     
     /* --------------------------------
-       ----------- Get All ------------ 
+       -------- Get By filters -------- 
        -------------------------------- */
     
     // Cas : aucun filtre
@@ -89,10 +89,10 @@ class ItemControllerTest {
     // Cas : type uniquement
     @Test
     void getAll_shouldReturnFilteredItems_whenTypeProvided() throws Exception {
-        // Given
+        // Arrange
         given(itemService.findByFilters(ItemType.ONE_HAND_WEAPON, null)).willReturn(List.of(itemResponse));
 
-        // When / Then
+        // Act / Assert
         mockMvc.perform(get("/items")
         		.param("type", "ONE_HAND_WEAPON")
         		.contentType(MediaType.APPLICATION_JSON))
@@ -109,10 +109,10 @@ class ItemControllerTest {
     // Cas : rareté uniquement
     @Test
     void getAll_shouldReturnFilteredItems_whenOnlyRarityProvided() throws Exception {
-        // Given
+        // Arrange
         given(itemService.findByFilters(null, ItemRarity.COMMON)).willReturn(List.of(itemResponse));
 
-        // When / Then
+        // Act / Assert
         mockMvc.perform(get("/items")
         		.param("rarity", "COMMON")
         		.contentType(MediaType.APPLICATION_JSON))
@@ -129,11 +129,11 @@ class ItemControllerTest {
     // Cas : type + rareté
     @Test
     void getAll_shouldReturnFilteredItems_whenTypeAndRarityProvided() throws Exception {
-        // Given
+        // Arrange
         given(itemService.findByFilters(ItemType.ONE_HAND_WEAPON, ItemRarity.COMMON))
                 .willReturn(List.of(itemResponse));
 
-        // When / Then
+        // Act / Assert
         mockMvc.perform(get("/items")
         		.param("type", "ONE_HAND_WEAPON")
         		.param("rarity", "COMMON")
@@ -147,6 +147,8 @@ class ItemControllerTest {
         	.andExpect(jsonPath("$[0].stat").value("ATQ"))
         	.andExpect(jsonPath("$[0].rarity").value("COMMON"));
     }
+    
+    // TODO Cas : Pas de matche
     
     /* --------------------------------
        ----------- Get by ID ---------- 
@@ -263,11 +265,11 @@ class ItemControllerTest {
     // Cas : nom déjà pris
     @Test
     void update_shouldReturn409_whenNameAlreadyExists() throws Exception {
-        // Given
+        // Arrange
         given(itemService.update(eq(itemId), any(ItemRequestDTO.class)))
         	.willThrow(new IllegalArgumentException("Un item avec le nom 'Épée rouillée' existe déjà"));
 
-        // When / Then
+        // Act / Assert
         mockMvc.perform(put("/items/{id}", itemId)
         		.contentType(MediaType.APPLICATION_JSON)
         		.content(objectMapper.writeValueAsString(itemRequest)))
